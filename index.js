@@ -11,9 +11,6 @@ async function main() {
   const data = await res.json();
 
   if (data.success) {
-    sendTelegramMessage("testing schedule");
-    return;
-
     const catalogs = data.data.catalogs || [];
     let allTitles = "";
 
