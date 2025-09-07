@@ -11,13 +11,14 @@ async function main() {
   const data = await res.json();
 
   if (data.success) {
+    sendTelegramMessage("testing schedule");
+    return;
+
     const catalogs = data.data.catalogs || [];
     let allTitles = "";
 
     const now = Date.now();
     const oneDay = 24 * 60 * 60 * 1000;
-
-    let toggle = true
 
     for (let catalog of catalogs) {
       let articles = catalog.articles || [];
