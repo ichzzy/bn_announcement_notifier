@@ -2,7 +2,7 @@ name: Run Script
 
 on:
   schedule:
-    - cron: "3 3 * * *" # UTC 03:03 / UTC+8 11:03
+    - cron: "1 * * * *"
   workflow_dispatch:
 
 jobs:

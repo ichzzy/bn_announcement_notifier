@@ -15,14 +15,14 @@ async function main() {
     let allTitles = "";
 
     const now = Date.now();
-    const oneDay = 24 * 60 * 60 * 1000;
+    const oneHour = 60 * 60 * 1000;
 
     for (let catalog of catalogs) {
       let articles = catalog.articles || [];
       for (let article of articles) {
         let releaseDate = Number(article.releaseDate); // Millis
 
-        if (now - releaseDate <= oneDay) {
+        if (now - releaseDate <= oneHour) {
           const releaseDateStr = new Date(releaseDate).toLocaleString("zh-TW", {
             timeZone: "Asia/Taipei",
             hour12: false,
