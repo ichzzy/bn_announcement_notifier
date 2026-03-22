@@ -15,7 +15,7 @@ async function main() {
     let allTitles = "";
 
     const now = Date.now();
-    const checkInterval = 10 * 60 * 1000;
+    const checkInterval = 60 * 60 * 1000; // due to the delay of the github workflow, set to 1 hour
 
     for (let catalog of catalogs) {
       let articles = catalog.articles || [];
