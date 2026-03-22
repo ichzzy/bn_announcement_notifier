@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 
 const TG_BOT_TOKEN = process.env.TG_BOT_TOKEN;
 const TG_CHAT_ID = process.env.TG_CHAT_ID;
-const BN_LIST_ANNO_API = "https://www.binance.com/bapi/apex/v1/public/apex/cms/article/list/query?type=1&pageNo=1&pageSize=10&catalogId=161";
+const BN_LIST_ANNO_API = "https://www.binance.com/bapi/apex/v1/public/apex/cms/article/list/query?type=1&pageNo=1&pageSize=10";
 
 async function main() {
   const res = await fetch(BN_LIST_ANNO_API);
@@ -15,24 +15,34 @@ async function main() {
     let allTitles = "";
 
     const now = Date.now();
-    const oneHour = 60 * 60 * 1000;
+    const checkInterval = 10 * 60 * 1000;
 
     for (let catalog of catalogs) {
       let articles = catalog.articles || [];
       for (let article of articles) {
         let releaseDate = Number(article.releaseDate); // Millis
 
-        if (now - releaseDate <= oneHour) {
+        if (now - releaseDate <= checkInterval) {
           const releaseDateStr = new Date(releaseDate).toLocaleString("zh-TW", {
             timeZone: "Asia/Taipei",
             hour12: false,
           });
 
-          allTitles +=
-            "[" + releaseDateStr + "] " +
-            (article.title.includes("Delist") || article.title.includes("delist") ? "⚠️ " : "") +
-            article.title +
-            "\n";
+          let isTarget = false;
+          let tag = "";
+          
+          if (catalog.catalogId === 161 || article.title.includes("Delist") || article.title.includes("delist")) {
+            tag = "⚠️ ";
+            isTarget = true;
+          } else if (article.title.includes("Monitoring Tag") || article.title.includes("monitoring tag")) {
+            tag = "🔍 ";
+            isTarget = true;
+          }
+
+          if (isTarget) {
+            const url = `https://www.binance.com/en/support/announcement/${article.code}`;
+            allTitles += `[${releaseDateStr}] ${tag}<a href="${url}">${article.title}</a>\n`;
+          }
         }
       }
     }
